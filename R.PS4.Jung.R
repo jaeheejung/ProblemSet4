@@ -3,8 +3,9 @@
 
 
 library(plyr)
-#Load library plyr, which will be useful.
+#Load the plyr package, just in case.
 
+#######NetLogo Exercise#######
 Organize <- function(filename){
 #This function takes as input a generic NetLogo file.
 
@@ -134,11 +135,106 @@ write.csv(candidates,file.path(namedatetime,"Turtles","Candidates.csv"))
 }
 
 
+#######JMR Ch.4 Problem 3#######
+sink("SquareCube")
+#Create a program/script named "SquareCube" in the working directory.
+
+cat("number square cube")
+#These are the headings of the table.
+
+for(i in 1:n){
+		squared <- i^2
+		cubed <- i^3
+		cat(format(i,width=8),
+		format(squared,width=10),
+		format(cubed,width=10),
+		"\n",sep="")
+}
+#The for loop creates the table of numbers, squares, and cubes.
+
+sink()
+#The sink function terminates and saves the program/script "SquareCube", which can be read later on using the source function.
 
 
+#######JMR Ch.4 Problem 4#######
+mult.table <- matrix(0,9,9)
+#Create a temporary 9 by 9 matrix filled with 0s.
+
+for(i in 1:9){
+	mult.table[i,] <- i*(1:9)
+}
+#For loop mult.table by row.
+
+print(mult.table)
+#Check the output.
 
 
+#######JMR Ch.7 Problem 3#######
+pop <- data.frame(m=rnorm(100,160,20),f=rnorm(100,160,20))
+#This is code from the JMR book question.
+
+next.gen <- function(pop){
+	pop$m <- sample(pop$m)
+	pop$m <- apply(pop,1,mean)
+	pop$f <- pop$m
+	return(pop)
+}
+#This is code from the JMR book question.
+
+library(lattice)
+#Load the lattice package.
+
+height.data <- data.frame(NULL)
+#Make an empty data.frame to be filled through for loop.
+
+for(i in 1:9){
+	one.gen.height <- data.frame(next.gen(pop)[,1],rep(i,100))
+	height.data <- rbind(height.data,one.gen.height)
+}
+#Fill the data.frame height.data by for looping the male heights of each generation simulated.
+
+colnames(height.data) <- c("height","generation")
+#Assign proper column names to the data.
+
+histogram(~height|generation,data=height.data,main="Distribution of male height by generation",xlab="ht")
+#Create a panel of 9 plots as in the book.
 
 
+#######JMR Ch.7 Problem 4#######
+treeg <- read.csv("/Users/jaeheejung/Desktop/Spring 2014/Applied Statistical Programming/inst/resources/data/treegrowth.csv")
+#Read in the data.
 
+library(lattice)
+#Load the lattice package.
 
+#What follows below is the code in the JMR book used to draw the graph. I utilize this code to make the same plot using the lattice package. I mark below where this replicated code ends.
+trees <- list()
+n <- 0
+current.ID <- treeg$tree.ID[1]
+current.age <- treeg$age[1]
+current.dbh <- treeg$dbh.in[1]
+current.height <- treeg$height.ft[1]
+for(i in 2:dim(treeg)[1]){
+	if(treeg$tree.ID[i]==current.ID){
+		current.age <- c(treeg$age[i],current.age)
+		current.dbh <- c(treeg$dbh.in[i],current.dbh)
+		current.height <- c(treeg$height.ft[i],current.height)
+	}else{
+		n <- n+1
+		trees[[n]] <- list(tree.ID=current.ID,forest=treeg$forest[i-1],habitat=treeg$habitat[i-1],age=current.age,dbh.in=current.dbh,height.ft=current.height)
+		current.ID <- treeg$tree.ID[i]
+		current.age <- treeg$age[i]
+		current.dbh <- treeg$dbh.in[i]
+		current.height <- treeg$height.ft[i]
+	}
+}
+n <- n+1
+trees[[n]] <- list(tree.ID=current.ID,forest=treeg$forest[i],habitat=treeg$habitat[i],age=current.age,dbh.in=current.dbh,height.ft=current.height)
+
+my.max <- function(x,i)max(x[[i]])
+max.age <- max(sapply(trees,my.max,"age"))
+max.height <- max(sapply(trees,my.max,"height.ft"))
+#This is the end of the code from the JMR book.
+
+xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0,max.age),ylim=c(0,max.height),type="l")
+#Draw the plot using the lattice function xyplot.
