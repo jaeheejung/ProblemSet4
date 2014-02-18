@@ -81,8 +81,14 @@ districts <- turtles.all[districts.index, ]
 districts <- districts[,colSums(apply(districts,2,function(X){X==""}))==0]
 #Remove columns that are empty (i.e. have only quotation marks).
 
-write.csv(districts,file.path(namedatetime,"Turtles","Districts.csv"))
-#Write out Districts.csv to the sub-directory Turtles.
+unique.districts <- apply(districts,2,function(X){length(unique(X))})
+#Calculate the number of unique values in each column of districts.
+
+unique.index.districts <- which(unique.districts==1)
+#Index the columns that have a single unique value (i.e. that have constant values).
+
+districts <- districts[,-unique.index.voters]
+#Drop the columns with constant values.
 
 voters.index <- which(turtles.all[,"breed"]=="{breed voters}")
 #Index the row numbers of all that have "{breed voters}" in the breed column.
@@ -93,8 +99,14 @@ voters <- turtles.all[voters.index, ]
 voters <- voters[,colSums(apply(voters,2,function(X){X==""}))==0]
 #Remove columns that are empty (i.e. have only quotation marks).
 
-write.csv(voters,file.path(namedatetime,"Turtles","Voters.csv"))
-#Write out Voters.csv to the sub-directory Turtles.
+unique.voters <- apply(voters,2,function(X){length(unique(X))})
+#Calculate the number of unique values in each column of voters.
+
+unique.index.voters <- which(unique.voters==1)
+#Index the columns that have a single unique value (i.e. that have constant values).
+
+voters <- voters[,-unique.index.voters]
+#Drop the columns with constant values.
 
 activists.index <- which(turtles.all[,"breed"]=="{breed activists}")
 #Index the row numbers of all that have "{breed activists}" in the breed column.
@@ -105,8 +117,14 @@ activists <- turtles.all[activists.index, ]
 activists <- activists[,colSums(apply(activists,2,function(X){X==""}))==0]
 #Remove columns that are empty (i.e. have only quotation marks).
 
-write.csv(activists,file.path(namedatetime,"Turtles","Activists.csv"))
-#Write out Activists.csv to the sub-directory Turtles.
+unique.activists <- apply(activists,2,function(X){length(unique(X))})
+#Calculate the number of unique values in each column of activists.
+
+unique.index.activists <- which(unique.activists==1)
+#Index the columns that have a single unique value (i.e. that have constant values).
+
+activists <- activists[,-unique.index.activists]
+#Drop the columns with constant values.
 
 parties.index <- which(turtles.all[,"breed"]=="{breed parties}")
 #Index the row numbers of all that have "{breed parties}" in the breed column.
@@ -117,8 +135,14 @@ parties <- turtles.all[parties.index, ]
 parties <- parties[,colSums(apply(parties,2,function(X){X==""}))==0]
 #Remove columns that are empty (i.e. have only quotation marks).
 
-write.csv(parties,file.path(namedatetime,"Turtles","Parties.csv"))
-#Write out Parties.csv to the sub-directory Turtles.
+unique.parties <- apply(parties,2,function(X){length(unique(X))})
+#Calculate the number of unique values in each column of parties.
+
+unique.index.parties <- which(unique.parties==1)
+#Index the columns that have a single unique value (i.e. that have constant values).
+
+parties <- parties[,-unique.index.parties]
+#Drop the columns with constant values.
 
 candidates.index <- which(turtles.all[,"breed"]=="{breed cands}")
 #Index the row numbers of all that have "{breed cands}" in the breed column.
@@ -128,6 +152,27 @@ candidates <- turtles.all[candidates.index, ]
 
 candidates <- candidates[,colSums(apply(candidates,2,function(X){X==""}))==0]
 #Remove columns that are empty (i.e. have only quotation marks).
+
+unique.candidates <- apply(candidates,2,function(X){length(unique(X))})
+#Calculate the number of unique values in each column of candidates.
+
+unique.index.candidates <- which(unique.candidates==1)
+#Index the columns that have a single unique value (i.e. that have constant values).
+
+candidates <- candidates[,-unique.index.candidates]
+#Drop the columns with constant values.
+
+write.csv(districts,file.path(namedatetime,"Turtles","Districts.csv"))
+#Write out Districts.csv to the sub-directory Turtles.
+
+write.csv(voters,file.path(namedatetime,"Turtles","Voters.csv"))
+#Write out Voters.csv to the sub-directory Turtles.
+
+write.csv(activists,file.path(namedatetime,"Turtles","Activists.csv"))
+#Write out Activists.csv to the sub-directory Turtles.
+
+write.csv(parties,file.path(namedatetime,"Turtles","Parties.csv"))
+#Write out Parties.csv to the sub-directory Turtles.
 
 write.csv(candidates,file.path(namedatetime,"Turtles","Candidates.csv"))
 #Write out Candidates.csv to the sub-directory Turtles.
