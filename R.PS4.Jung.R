@@ -177,6 +177,179 @@ write.csv(parties,file.path(namedatetime,"Turtles","Parties.csv"))
 write.csv(candidates,file.path(namedatetime,"Turtles","Candidates.csv"))
 #Write out Candidates.csv to the sub-directory Turtles.
 
+D1.headings <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8544,nlines=1)
+#Read the headings (Red, Blue, etc.) of the D1 section of the file.
+
+D1.headings <- D1.headings[c(1,5,9,13,17,21)]
+#Remove the meaningless quotation markets, getting a vector of relevant headings.
+
+D1.col.names <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8545,nlines=1)
+#Read in the vector of column names.
+
+D1.data <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8546,nlines=169)
+#Read the D1 section of the file, which starts at line 8547 and ends at line 8715.
+
+D1.data <- matrix(D1.data,nrow=169,byrow=TRUE)
+#Convert D1.data into a 169 by 84 matrix.
+
+colnames(D1.data) <- D1.col.names
+#Assign D1.col.names as the column names of D1.data.
+
+D1.data <- D1.data[,c(2,6,10,14,18,22)]
+#Leave only y columns, which are the positions of candidates, activists, and voters.
+
+colnames(D1.data) <- D1.headings
+#Substitute the column names of D1.data with D1.headings
+
+write.csv(D1.data,file.path(namedatetime,"Plots","PositionPlot","D1.csv"))
+#Write out D1.data as a csv file.
+
+#Below, I start repeating the code I wrote to get D1.data to get D2.data and D3.data. Since the process is the same except for the different object names and row numbers, I will not document what I did.
+D2.headings <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8728,nlines=1)
+
+D2.headings <- D2.headings[c(1,5,9,13,17,21)]
+
+D2.col.names <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8729,nlines=1)
+
+D2.data <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8730,nlines=169)
+
+D2.data <- matrix(D2.data,nrow=169,byrow=TRUE)
+
+colnames(D2.data) <- D2.col.names
+
+D2.data <- D2.data[,c(2,6,10,14,18,22)]
+
+colnames(D2.data) <- D2.headings
+
+write.csv(D2.data,file.path(namedatetime,"Plots","PositionPlot","D2.csv"))
+
+D3.headings <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8912,nlines=1)
+
+D3.headings <- D3.headings[c(1,5,9,13,17,21)]
+
+D3.col.names <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8913,nlines=1)
+
+D3.data <- scan(file=filename,what=c(0,""),sep=",",quiet=TRUE,skip=8914,nlines=169)
+
+D3.data <- matrix(D3.data,nrow=169,byrow=TRUE)
+
+colnames(D3.data) <- D3.col.names
+
+D3.data <- D3.data[,c(2,6,10,14,18,22)]
+
+colnames(D3.data) <- D3.headings
+
+write.csv(D3.data,file.path(namedatetime,"Plots","PositionPlot","D3.csv"))
+#This ends the code for creating D2.csv and D3.csv.
+
+mode(D1.data) <- "numeric"
+mode(D2.data) <- "numeric"
+mode(D3.data) <- "numeric"
+#Change the three data, which are composed of character values, to numeric values in order to calculate the mean.
+
+D1 <- apply(D1.data,2,mean)
+D2 <- apply(D2.data,2,mean)
+D3 <- apply(D3.data,2,mean)
+#Get the average position of each agent in each dimension.
+
+names(D1) <- NULL
+names(D2) <- NULL
+names(D3) <- NULL
+#Make the names of D1, D2, and D3 NULL so that we can directly plot them.
+
+pdf(file=file.path(namedatetime,"Plots","PositionPlot","Positions.pdf"))
+#Open a pdf file to put my plot in.
+
+plot(NULL,xlab="",ylab="",xlim=c(1,6),ylim=c(-10,10),axes=FALSE)
+#Create a NULL plot with invisible x and y limits.
+
+box(lwd=1)
+#Add a contour box.
+
+axis(side=2)
+#Add the y axis.
+
+mtext(side=2,"Average Positions",padj=-5)
+#Label the y axis.
+
+axis(side=1, at=c(1:6), labels=c("RCand","BCand","RAct","RVote","BVote","BAct"))
+#Label the x axis according to agent type.
+
+points(D1,pch="1",col=c("red","blue","red","red","blue","blue"))
+#Add average positions in dimension 1 with different colors for Democrats and Republicans.
+
+points(D2,pch="2",col=c("red","blue","red","red","blue","blue"))
+#Add average positions in dimension 2 with different colors for Democrats and Republicans.
+
+points(D3,pch="3",col=c("red","blue","red","red","blue","blue"))
+#Add average positions in dimension 3 with different colors for Democrats and Republicans.
+
+title("Average positions of candidates, activists,\n and voters along three dimensions")
+#Add the main title of the plot.
+
+legend("topleft",legend=c("1: D1","2: D2","3: D3"))
+#Add a legend specifying what the 1, 2, 3 points refer to.
+
+dev.off()
+#Close the pdf plotting device.
+
+winners.col.names <- scan(filename,what=c(0,""),sep=",",skip=9139,nlines=1,quiet=TRUE)
+#Read in the column names of the WINNERS section of the data file.
+
+winners.data <- scan(filename,what=c(0,""),sep=",",skip=9140,nlines=169,quiet=TRUE)
+#Read in the WINNERS section of the data file.
+
+winners.data <- matrix(winners.data,nrow=169,byrow=TRUE)
+#Tranform the vector into a matrix of data.
+
+colnames(winners.data) <- winners.col.names
+#Assign winners.col.names as the column names of winners.data.
+
+winners.data <- winners.data[,1:12]
+#Only include the first twelve columns of winners.data, because other columns are empty.
+
+winners.data <- winners.data[,c(1,2,5,6,9,10)]
+#Only include the columns signifying the cycle, the party affiliation, and the half dividing line used in the original NetLogo program plot. This drops columns such as "color","pen down?"
+
+colnames(winners.data) <- c("Cycle","Dem","Cycle","Fifty","Cycle","Rep")
+#Change the colunm names of winners.data from x's and y's to clearly idenfiable headings.
+
+write.csv(winners.data,file.path(namedatetime,"Plots","WinnersPlot","Winner.csv"))
+#Write out Winner.csv.
+
+pdf(file=file.path(namedatetime,"Plots","WinnersPlot","Winner.pdf"))
+#Create a pdf file to plot.
+
+plot(NULL,xlab="Cycle",ylab="% of candidates won",xlim=c(0,168),ylim=c(30,60),axes=FALSE)
+#Create an empty plot with the axis labels showing, but the axis ranges hidden.
+
+box(lwd=1)
+#Add the contour of the plotting box.
+
+axis(side=2)
+#Add the y axis.
+
+axis(side=1,at=c(0:168),labels=c(0:168))
+#Add the x axis. The labels specify cycles from 0 to 168.
+
+lines(winners.data[,2],lty=1,col="blue")
+#The second column of winners.data is data on the percentage of Democratic candidates. Plot a type 1 line in blue.
+
+lines(winners.data[,6],lty=1,col="red")
+#The sixth column of winners.data is data on the percentage of Republican candidates. Plot a type 1 line in red.
+
+lines(winners.data[,4],lty=2,col="grey")
+#The fourth column of winners.data is data on the percentage that divides in half. For this dataset, the dividing line is 45%. Plot a type 2 line in grey.
+
+title("Percentage of candidates who won in each cycle")
+#Add the main title of the plot.
+
+legend("topleft",legend=c("Republicans","Democrats"),lty=c(1,1),col=c("red","blue"))
+#Add a legend specifying what the lines mean.
+
+dev.off()
+#Turn off the plotting device.
+
 }
 
 
