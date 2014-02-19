@@ -455,14 +455,5 @@ max.height <- max(sapply(trees,my.max,"height.ft"))
 #This is the end of the code from the JMR book.
 
 xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0,max.age),ylim=c(0,max.height),type="l")
-<<<<<<< HEAD
 #Draw the plot using the lattice function xyplot.
 
-
-###Changes for Jacob's office hour###
-1+1
-
-2+2
-=======
-#Draw the plot using the lattice function xyplot.
->>>>>>> parent of 80bb6e3... PS4
