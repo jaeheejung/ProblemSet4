@@ -460,3 +460,5 @@ xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0
 
 ###Changes for Jacob's office hour###
 1+1
+
+2+2
