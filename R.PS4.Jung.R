@@ -3,7 +3,7 @@
 
 
 library(plyr)
-#Load the plyr package, just in case.
+#Load the plyr package; it might be useful.
 
 #######NetLogo Exercise#######
 Organize <- function(filename){
@@ -353,7 +353,7 @@ dev.off()
 polarization.col.names <- scan(filename,what=c(0,""),sep=",",skip=9320,nlines=1,quiet=TRUE)
 #Read in the column names of the section "POLARIZATION" in the NetLogo.csv file.
 
-polarization.data <- scan("NetLogo.csv",what=c(0,""),sep=",",skip=9321,nlines=169,quiet=TRUE)
+polarization.data <- scan(filename,what=c(0,""),sep=",",skip=9321,nlines=169,quiet=TRUE)
 #Read in the actual POLARIZATION section.
 
 polarization.data <- matrix(polarization.data,nrow=169,byrow=TRUE)
