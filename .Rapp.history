@@ -1,2 +1,39 @@
 1+1
 2+2
+treeg <- read.csv("/Users/jaeheejung/Desktop/Spring 2014/Applied Statistical Programming/inst/resources/data/treegrowth.csv")#
+#Read in the data.#
+#
+library(lattice)#
+#Load the lattice package.#
+#
+#What follows below is the code in the JMR book used to draw the graph. I utilize this code to make the same plot using the lattice package. I mark below where this replicated code ends.#
+trees <- list()#
+n <- 0#
+current.ID <- treeg$tree.ID[1]#
+current.age <- treeg$age[1]#
+current.dbh <- treeg$dbh.in[1]#
+current.height <- treeg$height.ft[1]#
+for(i in 2:dim(treeg)[1]){#
+	if(treeg$tree.ID[i]==current.ID){#
+		current.age <- c(treeg$age[i],current.age)#
+		current.dbh <- c(treeg$dbh.in[i],current.dbh)#
+		current.height <- c(treeg$height.ft[i],current.height)#
+	}else{#
+		n <- n+1#
+		trees[[n]] <- list(tree.ID=current.ID,forest=treeg$forest[i-1],habitat=treeg$habitat[i-1],age=current.age,dbh.in=current.dbh,height.ft=current.height)#
+		current.ID <- treeg$tree.ID[i]#
+		current.age <- treeg$age[i]#
+		current.dbh <- treeg$dbh.in[i]#
+		current.height <- treeg$height.ft[i]#
+	}#
+}#
+n <- n+1#
+trees[[n]] <- list(tree.ID=current.ID,forest=treeg$forest[i],habitat=treeg$habitat[i],age=current.age,dbh.in=current.dbh,height.ft=current.height)#
+#
+my.max <- function(x,i)max(x[[i]])#
+max.age <- max(sapply(trees,my.max,"age"))#
+max.height <- max(sapply(trees,my.max,"height.ft"))#
+#This is the end of the code from the JMR book.#
+#
+xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0,max.age),ylim=c(0,max.height),type="l",group=tree.ID)#
+#Draw the plot using the lattice function xyplot.

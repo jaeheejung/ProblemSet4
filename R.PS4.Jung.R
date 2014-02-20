@@ -350,6 +350,105 @@ legend("topleft",legend=c("Republicans","Democrats"),lty=c(1,1),col=c("red","blu
 dev.off()
 #Turn off the plotting device.
 
+polarization.col.names <- scan(filename,what=c(0,""),sep=",",skip=9320,nlines=1,quiet=TRUE)
+#Read in the column names of the section "POLARIZATION" in the NetLogo.csv file.
+
+polarization.data <- scan("NetLogo.csv",what=c(0,""),sep=",",skip=9321,nlines=169,quiet=TRUE)
+#Read in the actual POLARIZATION section.
+
+polarization.data <- matrix(polarization.data,nrow=169,byrow=TRUE)
+#Transform the vector into a matrix.
+
+colnames(polarization.data) <- polarization.col.names
+#Assign polarization.col.names as the column names of polarization.data.
+
+polarization.data <- polarization.data[,c(1,2,5,6,9,10)]
+#Remove unnecessary columns, leaving only the cycles and the mean positions.
+
+colnames(polarization.data) <- c("Cycle","CandidatePosition","Cycle","VoterPosition","Cycle","ActivistPosition")
+#Change the column headings for better identifiability.
+
+write.csv(polarization.data,file.path(namedatetime,"Plots","PolarizationPlot","Polarization.csv"))
+#Write out PolarizationPlot.csv.
+
+pdf(file=file.path(namedatetime,"Plots","PolarizationPlot","PolarizationPlot.pdf"))
+#Create a pdf file to plot in.
+
+par(oma=c(1,1,1,1))
+#Set the outer margins of the plot.
+
+plot(NULL,xlab="Cycle",ylab="Mean Position",xlim=c(0,168),ylim=c(-0.5,9),axes=FALSE,type="n")
+#Create an empty plot.
+
+box(lty=77)
+#Draw the contour box of the plot.
+
+axis(2,tick=FALSE)
+#Add the y axis without ticks.
+
+axis(1,at=c(0:168),tick=FALSE)
+#Add the x axis without ticks. The at argument signifies the cycles from 0 to 168.
+
+lines(polarization.data[,2],type="l",col="black",lty=30)
+#Plot a line of the mean positions of candidates. The original NetLogo file used color number 0, which corresponds to black in R.
+
+lines(polarization.data[,4],type="l",col="green",lty=30)
+#Plot a line of the mean positions of voters. The original NetLogo file used color number 55, which corresponds to green in R.
+
+lines(polarization.data[,6],type="l",col="orange",lty=30)
+#Plot a line of the mean positions of activists. The original NetLogo file used color number 25, which corresponds to orange in R.
+
+legend("bottomright",legend=c("Candidates","Voters","Activists"),lty=c(30,30,30),col=c("black","green","orange"))
+#Add a legend.
+
+title("Mean position of candidates, voters, \n and activists throughout the cycle")
+#Name the title of the plot.
+
+dev.off()
+#Turn off the plotting device.
+
+incumbent <- scan(filename,what=c(0,""),sep=",",skip=9500,nlines=169,quiet=TRUE)
+#Read in the "INCUMBENT" section of the NetLogo file.
+
+incumbent <- matrix(incumbent,nrow=169,byrow=TRUE)
+#Convert the vector into a marix.
+
+incumbent <- incumbent[,c(1,2)]
+#Leave only the first two columns that are relevant.
+
+colnames(incumbent) <- c("Cycle","Percentage Winning")
+#Assign column names to the matrix.
+
+write.csv(incumbent,file.path(namedatetime,"Plots","IncumbentPercentagePlot","IncumbentWins.csv"),row.names=FALSE)
+#Write out the matrix in csv format without adding row numbers, which is unnecessary because excel files identify row numbers automatically.
+
+pdf(file=file.path(namedatetime,"Plots","IncumbentPercentagePlot","IncumbentWins.pdf"),bg="honeydew2",width=5,height=5)
+#Create a pdf to plot in, specifying the size and the background color.
+
+par(oma=c(1,2,1,2),cex=1)
+#Set the outer margins and the font size.
+
+plot(NULL,xlab="Time Period",ylab="% of Incumbents Winning",xlim=c(0,168),ylim=c(0,80),axes=FALSE,type="n")
+#Make an empty plot.
+
+box(lwd=2)
+#Add a contour box of width 2.
+
+axis(2,col.ticks="purple")
+#Add y axis with ticks colored purple.
+
+axis(1,col.ticks="purple")
+#Add x axis with ticks colored purple.
+
+lines(incumbent[,2],col="darkgreen")
+#Plot the second column of the incumbent matrix in darkgreen.
+
+title("Percentage of incumbent candidates \n winning in each time period")
+#Add the main title of the plot.
+
+dev.off()
+#Turn off the plotting device.
+
 }
 
 
@@ -454,6 +553,5 @@ max.age <- max(sapply(trees,my.max,"age"))
 max.height <- max(sapply(trees,my.max,"height.ft"))
 #This is the end of the code from the JMR book.
 
-xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0,max.age),ylim=c(0,max.height),type="l")
+xyplot(height.ft~age,data=treeg,xlab="age (years)",ylab="height (feet)",xlim=c(0,max.age),ylim=c(0,max.height),type="l",group=tree.ID)
 #Draw the plot using the lattice function xyplot.
-
